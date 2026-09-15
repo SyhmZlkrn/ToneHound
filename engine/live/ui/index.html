@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<!--
+  ToneHound live UI.
+
+  Single page, no build step, no framework: the eventual product is a JUCE
+  WebView, which ships a bare browser engine with no bundler and no network.
+  Everything here is served from the same origin as the engine (§1 of
+  docs/ui_protocol.md) or, in mock mode, generated in the page itself.
+
+  Structure mirrors the protocol, not the DOM: I/O bar, tuner, amp, snippet,
+  results. The honesty requirements of §5 are load-bearing markup, not
+  decoration -- the stem player sits above the ranking, every candidate shows
+  its raw distance, and the server's caveat is rendered verbatim.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ToneHound</title>
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+<div id="mock-banner" class="mock-banner" hidden>
+  MOCK MODE &mdash; no engine attached. Telemetry, devices, profiles and matches on this page are fabricated for UI work.
+</div>
+
+<!-- ===================== 1. I/O BAR ===================== -->
+<header class="rack rack-io">
+  <div class="brand">
+    <span class="brand-mark">EZ</span><span class="brand-name">TONE</span>
+    <span id="conn-dot" class="conn-dot" data-state="connecting" title="connection"></span>
+    <span id="conn-text" class="conn-text">connecting</span>
+  </div>
+
+  <div class="io-devices">
+    <label class="field">
+      <span class="field-label">Host API</span>
+      <select id="sel-hostapi"></select>
+    </label>
+    <label class="field">
+      <span class="field-label">Input</span>
+      <select id="sel-input"></select>
+    </label>
+    <label class="field field-narrow">
+      <span class="field-label">Ch</span>
+      <select id="sel-input-ch"></select>
+    </label>
+    <label class="field">
+      <span class="field-label">Output</span>
+      <select id="sel-output"></select>
+    </label>
+    <label class="field field-narrow">
+      <span class="field-label">Block</span>
+      <select id="sel-block"></select>
+    </label>
+    <div class="io-actions">
+      <button id="btn-rescan" class="btn btn-ghost" title="Re-scan audio devices (briefly blocks)">Rescan</button>
+      <button id="btn-apply-io" class="btn">Apply</button>
+    </div>
+  </div>
+
+  <div class="io-latency">
+    <div class="stat">
+      <span class="stat-value" id="stat-rate">48 000</span>
+      <span class="stat-unit">Hz</span>
+      <span class="stat-label">rate</span>
+    </div>
+    <div class="stat">
+      <span class="stat-value" id="stat-block-ms">&ndash;</span>
+      <span class="stat-unit">ms</span>
+      <span class="stat-label">block</span>
+    </div>
+    <div class="stat stat-wide">
+      <span class="stat-value" id="stat-latency">&ndash;</span>
+      <span class="stat-unit">ms</span>
+      <!-- §5: never imply this was measured acoustically. -->
+      <span class="stat-label">round trip &mdash; reported by driver</span>
+    </div>
+  </div>
+
+  <div class="io-meters">
+    <div class="meter-row">
+      <span class="meter-name">IN</span>
+      <canvas id="meter-in" class="meter" width="440" height="18"></canvas>
+      <span class="clip-led" id="clip-in" title="input clipped">CLIP</span>
+    </div>
+    <div class="meter-row">
+      <span class="meter-name">OUT</span>
+      <canvas id="meter-out" class="meter" width="440" height="18"></canvas>
+      <span class="clip-led" id="clip-out" title="output clipped">CLIP</span>
+    </div>
+    <div class="gains">
+      <label class="slider">
+        <span>IN <b id="lbl-in-gain">0.0 dB</b></span>
+        <input id="in-gain" type="range" min="-24" max="24" step="0.5" value="0">
+      </label>
+      <label class="slider">
+        <span>OUT <b id="lbl-out-gain">0.0 dB</b></span>
+        <input id="out-gain" type="range" min="-60" max="12" step="0.5" value="0">
+      </label>
+    </div>
+  </div>
+
+  <div class="io-engage">
+    <button id="btn-engage" class="engage" data-state="off" aria-pressed="false">
+      <span class="engage-lamp"></span>
+      <span class="engage-text">ENGAGE</span>
+      <span class="engage-sub">stopped</span>
+    </button>
+    <div class="engage-side">
+      <button id="btn-bypass" class="btn btn-bypass" aria-pressed="false" title="Bypass the profile (B)">BYPASS <kbd>B</kbd></button>
+      <div class="monitor-group" role="group" aria-label="monitor routing">
+        <button class="seg" data-monitor="amp">AMP</button>
+        <button class="seg" data-monitor="dry">DRY</button>
+        <button class="seg" data-monitor="mute">MUTE</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- perf strip: the honest dropout channel (§4.4) -->
+<div class="perf-strip" id="perf-strip">
+  <span class="perf-item">headroom <b id="perf-headroom">&ndash;</b></span>
+  <span class="perf-item">block p95 <b id="perf-p95">&ndash;</b> / <span id="perf-budget">&ndash;</span></span>
+  <span class="perf-item">xruns <b id="perf-xruns">0</b></span>
+  <span class="perf-item perf-uptime">up <b id="perf-uptime">0:00</b></span>
+  <span class="perf-bar"><i id="perf-bar-fill"></i></span>
+  <span class="perf-warn" id="perf-warn" hidden></span>
+</div>
+
+<main class="grid">
+
+  <!-- ===================== 2. TUNER ===================== -->
+  <section class="rack panel panel-tuner">
+    <div class="panel-head">
+      <h2>Tuner</h2>
+      <div class="panel-head-right">
+        <label class="mini-field">
+          <span>A</span>
+          <input id="tuner-ref" type="number" min="410" max="470" step="0.5" value="440">
+          <span>Hz</span>
+        </label>
+        <label class="toggle">
+          <input id="tuner-on" type="checkbox" checked><span>on</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="tuner" id="tuner" data-state="idle">
+      <svg class="tuner-dial" viewBox="0 0 400 150" aria-hidden="true">
+        <!-- geometry matches EZTuner: centre (200,140), radius 120, +/-45 deg = +/-50 cents -->
+        <path class="dial-arc" d="M 115.1 55.1 A 120 120 0 0 1 284.9 55.1"></path>
+        <g class="dial-ticks" id="dial-ticks"></g>
+        <path class="dial-zone" d="M 190.6 20.4 A 120 120 0 0 1 209.4 20.4"></path>
+        <line class="needle" id="needle" x1="200" y1="140" x2="200" y2="26"></line>
+        <circle class="needle-hub" cx="200" cy="140" r="7"></circle>
+      </svg>
+
+      <div class="tuner-readout">
+        <div class="tuner-note">
+          <span class="note-name" id="note-name">&ndash;</span><span class="note-oct" id="note-oct"></span>
+        </div>
+        <div class="tuner-cents"><span id="cents-val">&ndash;</span><span class="cents-unit">cents</span></div>
+        <div class="tuner-hz"><span id="tuner-hz">&ndash;</span> Hz</div>
+      </div>
+
+      <div class="tuner-strings" id="tuner-strings"></div>
+      <div class="tuner-hint" id="tuner-hint">play a single string</div>
+    </div>
+  </section>
+
+  <!-- ===================== AMP / PROFILE ===================== -->
+  <section class="rack panel panel-amp">
+    <div class="panel-head">
+      <h2>Amp profile</h2>
+      <div class="panel-head-right">
+        <input id="profile-search" class="search" type="search" placeholder="filter profiles" autocomplete="off">
+        <span class="muted" id="profile-count"></span>
+      </div>
+    </div>
+
+    <div class="loaded" id="loaded-profile">
+      <div class="loaded-empty">No profile loaded &mdash; pick one below.</div>
+    </div>
+
+    <div class="profile-list" id="profile-list"></div>
+    <div class="index-status" id="index-status" hidden>
+      <span id="index-text">Fingerprinting profile index&hellip;</span>
+      <span class="bar"><i id="index-bar"></i></span>
+    </div>
+  </section>
+
+  <!-- ===================== 3. SNIPPET ===================== -->
+  <section class="rack panel panel-snippet">
+    <div class="panel-head">
+      <h2>Song snippet</h2>
+      <div class="panel-head-right">
+        <span class="muted" id="snippet-name">nothing loaded</span>
+        <button id="btn-forget" class="btn btn-ghost" hidden>Clear</button>
+      </div>
+    </div>
+
+    <div class="drop" id="drop">
+      <input id="file-input" type="file" accept="audio/*" hidden>
+      <div class="drop-inner">
+        <div class="drop-title">Drop a song here</div>
+        <div class="drop-sub">or <button class="linkish" id="btn-browse">choose a file</button> &mdash; mp3, wav, flac</div>
+        <div class="drop-sub muted" id="drop-limits"></div>
+      </div>
+    </div>
+
+    <div class="wave-wrap" id="wave-wrap" hidden>
+      <canvas id="wave" class="wave" height="150"></canvas>
+      <div class="wave-overlay" id="wave-overlay">
+        <div class="sel" id="sel">
+          <div class="sel-handle sel-handle-l" data-edge="l"></div>
+          <div class="sel-handle sel-handle-r" data-edge="r"></div>
+        </div>
+        <div class="playhead" id="playhead" hidden></div>
+      </div>
+      <div class="wave-bar">
+        <button id="btn-play-sel" class="btn btn-play" title="Play / stop selection (Space)">
+          <span class="play-glyph">&#9658;</span> Play selection <kbd>Space</kbd>
+        </button>
+        <span class="sel-readout" id="sel-readout">&ndash;</span>
+        <span class="sel-warn" id="sel-warn" hidden></span>
+        <span class="spacer"></span>
+        <label class="mini-field">
+          <span>DI</span>
+          <select id="sel-di"></select>
+        </label>
+        <label class="mini-field">
+          <span>Top</span>
+          <select id="sel-top"></select>
+        </label>
+        <button id="btn-match" class="btn btn-primary">Find the tone</button>
+      </div>
+      <audio id="snippet-audio" preload="auto"></audio>
+    </div>
+
+    <div class="job" id="match-job" hidden>
+      <div class="job-head">
+        <span class="job-stage" id="job-stage">separating</span>
+        <span class="job-msg" id="job-msg"></span>
+        <span class="job-eta" id="job-eta"></span>
+        <button id="btn-cancel-match" class="btn btn-ghost">Cancel</button>
+      </div>
+      <span class="bar"><i id="job-bar"></i></span>
+      <div class="job-note">Source separation runs at about real time &mdash; a 15 s crop takes roughly 15 s, plus a second or so per audition render.</div>
+    </div>
+  </section>
+
+  <!-- ===================== 4. RESULTS ===================== -->
+  <section class="rack panel panel-results">
+    <div class="panel-head">
+      <h2>Matches</h2>
+      <span class="muted" id="results-meta"></span>
+    </div>
+
+    <div class="results-empty" id="results-empty">
+      Crop the part of the song with the guitar in it, then hit <b>Find the tone</b>.
+    </div>
+
+    <div id="results" hidden>
+      <!-- §5.1: the isolated stem is the FIRST thing, above the ranking. -->
+      <div class="stem" id="stem">
+        <div class="stem-head">
+          <h3>Isolated guitar &mdash; listen to this first</h3>
+          <span class="stem-flag" id="stem-flag" hidden>separation failed</span>
+        </div>
+        <p class="stem-why">
+          This is what the matcher actually heard. If it does not sound like a guitar,
+          nothing below is worth reading &mdash; re-crop and try a busier or cleaner passage.
+        </p>
+        <div class="players">
+          <div class="player">
+            <span class="player-label">Isolated stem</span>
+            <audio id="stem-audio" controls preload="none"></audio>
+          </div>
+          <div class="player">
+            <span class="player-label">Your DI (dry input to every render below)</span>
+            <audio id="di-audio" controls preload="none"></audio>
+          </div>
+        </div>
+        <canvas id="stem-wave" class="stem-wave" height="60"></canvas>
+      </div>
+
+      <!-- §5.3: server-owned text, verbatim, in the flow, not behind an icon. -->
+      <blockquote class="caveat" id="caveat"></blockquote>
+
+      <div class="dist-scale" id="dist-scale">
+        <div class="dist-scale-head">
+          <span>Distance across the whole index</span>
+          <span class="muted" id="dist-scale-range"></span>
+        </div>
+        <div class="dist-track" id="dist-track"><div class="dist-median" id="dist-median"></div></div>
+        <div class="dist-note" id="dist-note"></div>
+      </div>
+
+      <ol class="candidates" id="candidates"></ol>
+    </div>
+  </section>
+</main>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<footer class="footnote">
+  Latency figures are <b>reported by the driver</b>, not an acoustic measurement.
+  Ranking is a rough draft &mdash; judge the isolated stem, then judge with your ears.
+  <span class="kbd-hints"><kbd>B</kbd> bypass &middot; <kbd>Space</kbd> play selection &middot; <kbd>Esc</kbd> cancel match</span>
+</footer>
+
+<script src="js/wav.js"></script>
+<script src="js/client.js"></script>
+<script src="js/mock.js"></script>
+<script src="js/waveform.js"></script>
+<script src="js/meters.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

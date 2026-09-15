@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "dependencies": [
+    {
+      "path": "native/vendor/signalsmith-linear",
+      "repository": "https://github.com/Signalsmith-Audio/linear.git",
+      "revision": "ec38d3332c7e9ce88a2fd969003d170baa2316b6",
+      "submodules": false
+    },
+    {
+      "path": "native/vendor/signalsmith-stretch",
+      "repository": "https://github.com/Signalsmith-Audio/signalsmith-stretch.git",
+      "revision": "57b93f4e9206a089a45387eaa39bdc9f310d3308",
+      "submodules": false
+    },
+    {
+      "path": "native/vendor/JUCE",
+      "repository": "https://github.com/juce-framework/JUCE.git",
+      "revision": "91ad83ae34a81e0833b1a2b0866f54846370ae53",
+      "submodules": false
+    },
+    {
+      "path": "native/vendor/NeuralAmpModelerCore",
+      "repository": "https://github.com/sdatkinson/NeuralAmpModelerCore.git",
+      "revision": "2563c0fd4cb1f9ce457d89a761738ea15097e1f3",
+      "submodules": true
+    }
+  ],
+  "submodule_revisions": {
+    "Dependencies/AudioDSPTools": "0827c6c2fc0deced568536142ea86f189e0b98a1",
+    "Dependencies/eigen": "bc3b39870ecb690a623a3f49149a358b95c5781d"
+  }
+}

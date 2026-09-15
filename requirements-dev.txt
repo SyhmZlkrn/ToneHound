@@ -1,0 +1,4 @@
+-r requirements-engine.txt
+pytest==9.1.1
+# Reference renderer used by parity tests, not required for native guitar DSP.
+neural-amp-modeler==0.13.0

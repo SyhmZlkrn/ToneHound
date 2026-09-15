@@ -1,0 +1,105 @@
+{
+  "repository": "https://github.com/pelennor2170/NAM_models",
+  "commit": "944ca6718581c60cc5365586d2f378d740e181f3",
+  "entries": [
+    {
+      "filename": "Phillipe P Bug1990-Lead-NoDrive-Cab-ESR0,011.nam",
+      "sha256": "419014a5e1cdd831682168c3f051e6f5e0dfd8fd794bea5fe600b121ad209b91",
+      "url": "https://raw.githubusercontent.com/pelennor2170/NAM_models/944ca6718581c60cc5365586d2f378d740e181f3/Phillipe%20P%20Bug1990-Lead-NoDrive-Cab-ESR0%2C011.nam",
+      "creator": "Phillipe P",
+      "rig": "full-rig",
+      "rig_evidence": "Creator filename explicitly includes -Cab-",
+      "license": "GPL-3.0",
+      "architecture": "WaveNet",
+      "version": "0.5.0"
+    },
+    {
+      "filename": "Phillipe P Bug333-Clean-Cab-ESR0,007.nam",
+      "sha256": "684fc395e606ed46ab0af128189e02b0f769af872df9ec8bc7a046a340b12f95",
+      "url": "https://raw.githubusercontent.com/pelennor2170/NAM_models/944ca6718581c60cc5365586d2f378d740e181f3/Phillipe%20P%20Bug333-Clean-Cab-ESR0%2C007.nam",
+      "creator": "Phillipe P",
+      "rig": "full-rig",
+      "rig_evidence": "Creator filename explicitly includes -Cab-",
+      "license": "GPL-3.0",
+      "architecture": "WaveNet",
+      "version": "0.5.0"
+    },
+    {
+      "filename": "Phillipe P Bug333-Crunch-DT-Cab-ESR0,014.nam",
+      "sha256": "3d9ce86140aafb36075d6a8a8004e768849165105140bbc0889b57eeff41a774",
+      "url": "https://raw.githubusercontent.com/pelennor2170/NAM_models/944ca6718581c60cc5365586d2f378d740e181f3/Phillipe%20P%20Bug333-Crunch-DT-Cab-ESR0%2C014.nam",
+      "creator": "Phillipe P",
+      "rig": "full-rig",
+      "rig_evidence": "Creator filename explicitly includes -Cab-",
+      "license": "GPL-3.0",
+      "architecture": "WaveNet",
+      "version": "0.5.0"
+    },
+    {
+      "filename": "Phillipe P Bug333-Crunch-NoDrive-Cab-ESR0,005.nam",
+      "sha256": "e6a05eec588e732c45fed228fdefeb6ea9a8204908f2d37ffe976d081ce5e0ff",
+      "url": "https://raw.githubusercontent.com/pelennor2170/NAM_models/944ca6718581c60cc5365586d2f378d740e181f3/Phillipe%20P%20Bug333-Crunch-NoDrive-Cab-ESR0%2C005.nam",
+      "creator": "Phillipe P",
+      "rig": "full-rig",
+      "rig_evidence": "Creator filename explicitly includes -Cab-",
+      "license": "GPL-3.0",
+      "architecture": "WaveNet",
+      "version": "0.5.0"
+    },
+    {
+      "filename": "Phillipe P Bug333-Lead-NoDrive-Cab-ESR0,007.nam",
+      "sha256": "8130669434bcf1e3a05843ae7f9f4144abfff64c2555b264b1dd893bd3b646cf",
+      "url": "https://raw.githubusercontent.com/pelennor2170/NAM_models/944ca6718581c60cc5365586d2f378d740e181f3/Phillipe%20P%20Bug333-Lead-NoDrive-Cab-ESR0%2C007.nam",
+      "creator": "Phillipe P",
+      "rig": "full-rig",
+      "rig_evidence": "Creator filename explicitly includes -Cab-",
+      "license": "GPL-3.0",
+      "architecture": "WaveNet",
+      "version": "0.5.0"
+    },
+    {
+      "filename": "Phillipe P Bug6262-Crunch-NoDrive-Cab-ESR0,004.nam",
+      "sha256": "b34b371d093faf5631e0e9c340e1600f95af043bb1e73cfd028ba775e228b1df",
+      "url": "https://raw.githubusercontent.com/pelennor2170/NAM_models/944ca6718581c60cc5365586d2f378d740e181f3/Phillipe%20P%20Bug6262-Crunch-NoDrive-Cab-ESR0%2C004.nam",
+      "creator": "Phillipe P",
+      "rig": "full-rig",
+      "rig_evidence": "Creator filename explicitly includes -Cab-",
+      "license": "GPL-3.0",
+      "architecture": "WaveNet",
+      "version": "0.5.0"
+    },
+    {
+      "filename": "Phillipe P Bugera6262-Lead-NoDrive-Cab-ESR0,009.nam",
+      "sha256": "881e0679bc2c5b05606f1f94e67ffcc8ab20d74cdf32f6326c09ef9562dcf96a",
+      "url": "https://raw.githubusercontent.com/pelennor2170/NAM_models/944ca6718581c60cc5365586d2f378d740e181f3/Phillipe%20P%20Bugera6262-Lead-NoDrive-Cab-ESR0%2C009.nam",
+      "creator": "Phillipe P",
+      "rig": "full-rig",
+      "rig_evidence": "Creator filename explicitly includes -Cab-",
+      "license": "GPL-3.0",
+      "architecture": "WaveNet",
+      "version": "0.5.0"
+    },
+    {
+      "filename": "Phillipe P JVM-CL-GR-NoDrive-Cab-ESR0,007.nam",
+      "sha256": "5ec3f574ec00cf9b44cff694254d0988054c12a27c75b4d95a05c92cc778a3e3",
+      "url": "https://raw.githubusercontent.com/pelennor2170/NAM_models/944ca6718581c60cc5365586d2f378d740e181f3/Phillipe%20P%20JVM-CL-GR-NoDrive-Cab-ESR0%2C007.nam",
+      "creator": "Phillipe P",
+      "rig": "full-rig",
+      "rig_evidence": "Creator filename explicitly includes -Cab-",
+      "license": "GPL-3.0",
+      "architecture": "WaveNet",
+      "version": "0.5.0"
+    },
+    {
+      "filename": "Phillipe P JVM-OD2-RD-NoDrive-Cab-ESR0,006.nam",
+      "sha256": "46d41f2dbde33d443ab4a2ef76d2782ea7609a778c4af0305f1f257f8cdcf4a9",
+      "url": "https://raw.githubusercontent.com/pelennor2170/NAM_models/944ca6718581c60cc5365586d2f378d740e181f3/Phillipe%20P%20JVM-OD2-RD-NoDrive-Cab-ESR0%2C006.nam",
+      "creator": "Phillipe P",
+      "rig": "full-rig",
+      "rig_evidence": "Creator filename explicitly includes -Cab-",
+      "license": "GPL-3.0",
+      "architecture": "WaveNet",
+      "version": "0.5.0"
+    }
+  ]
+}

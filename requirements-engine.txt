@@ -1,0 +1,15 @@
+# Direct dependencies validated in the development environment on 2026-09-09.
+# Install torch separately using the CPU or CUDA index in scripts/bootstrap.ps1.
+# Transitive dependencies are resolved by pip; this is not a complete wheel lock.
+numpy==2.2.6
+scipy==1.15.3
+soundfile==0.14.0
+librosa==0.11.0
+torch==2.11.0
+transformers==5.16.1
+huggingface-hub==1.30.0
+safetensors==0.8.0
+audio-separator[cpu]==0.47.0
+yt-dlp==2026.8.19
+requests==2.33.1
+sounddevice==0.5.6

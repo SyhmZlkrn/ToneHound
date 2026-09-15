@@ -1,0 +1,758 @@
+{
+  "date": "2026-09-09",
+  "purpose": "Regression comparison of pre-separation mono folding versus preserved stereo. These are similarity results, not verified recording rigs.",
+  "library_size": 40,
+  "embed_config": {
+    "model_id": "dzur658/MERT-v1-330M-finetuned-gtzan",
+    "revision": null,
+    "layers": [
+      8,
+      9,
+      10,
+      11
+    ],
+    "chunk_s": 5.0,
+    "hop_s": 5.0,
+    "max_chunks": 24,
+    "batch": 4,
+    "device": "auto",
+    "level": "rms",
+    "dtype": "float16"
+  },
+  "method": {
+    "separator": "htdemucs_6s via audio-separator, autocast enabled, default two shifts",
+    "random_seed": 0,
+    "seed_libraries": [
+      "Python random",
+      "NumPy",
+      "Torch"
+    ],
+    "old_mono_guitar": "Average input waveforms before separation, then embed the folded guitar output.",
+    "stereo_guitar_folded": "Preserve input stereo during separation, then embed the folded guitar output.",
+    "stereo_guitar": "Preserve stereo during separation, embed audible channels independently and average per-layer descriptions before final normalisation.",
+    "ranking": "Same cached mono-capture index and centred cosine search for all variants; no name or artist filters."
+  },
+  "experiments": [
+    {
+      "title": "Master of Puppets (Remastered)",
+      "url": "https://www.youtube.com/watch?v=E0ozmU9cJDg",
+      "start_seconds": 22.0,
+      "end_seconds": 60.0,
+      "original_channels": 2,
+      "channel_correlation": 0.5639588602476812,
+      "separation_stem_rms": {
+        "bass": 0.03373416140675545,
+        "drums": 0.09081442654132843,
+        "other": 0.00014199390716385096,
+        "vocals": 0.00015391805209219456,
+        "guitar": 0.10994846373796463,
+        "piano": 0.00016914246953092515
+      },
+      "variants": {
+        "old_mono_guitar": {
+          "stem_rms": 0.07345855236053467,
+          "top_six": [
+            {
+              "rank": 1,
+              "name": "t3k-28202-110848 Ampeg SVT - Ultra Lo MD 421",
+              "similarity": 0.5437461733818054,
+              "tone_id": 28202,
+              "model_id": 110848,
+              "key": "28adb2865a2af93a"
+            },
+            {
+              "rank": 2,
+              "name": "t3k-10912-83328 Roland JC 120B Jazz Chorus_ Bright On_ SM57",
+              "similarity": 0.4767988622188568,
+              "tone_id": 10912,
+              "model_id": 83328,
+              "key": "a0af9c5e6688cd0d"
+            },
+            {
+              "rank": 3,
+              "name": "t3k-19-56 Fender Super Reverb_ EQ Flat_ Volume 3_ sm57 and AKG 414",
+              "similarity": 0.4471958875656128,
+              "tone_id": 19,
+              "model_id": 56,
+              "key": "6d66fd4d2910349e"
+            },
+            {
+              "rank": 4,
+              "name": "t3k-35497-168768 FENDER TWIN CAP EDGE U67_R121 _1000 Epoch_",
+              "similarity": 0.4165605902671814,
+              "tone_id": 35497,
+              "model_id": 168768,
+              "key": "1c71096746649578"
+            },
+            {
+              "rank": 5,
+              "name": "t3k-51649-289460 NEW VERSION _ Fender DRRI _ Clean _ SM57 _ Royer R-121 _ Room _ Full Rig",
+              "similarity": 0.4082915782928467,
+              "tone_id": 51649,
+              "model_id": 289460,
+              "key": "4db8ea128567144e"
+            },
+            {
+              "rank": 6,
+              "name": "t3k-55360-316158 FNDR BFPRO VB Clean2 WRM CAB",
+              "similarity": 0.26907262206077576,
+              "tone_id": 55360,
+              "model_id": 316158,
+              "key": "ef34f639bbd84d72"
+            }
+          ]
+        },
+        "stereo_guitar_folded": {
+          "stem_rms": 0.08634445816278458,
+          "top_six": [
+            {
+              "rank": 1,
+              "name": "t3k-29891-127055 Marshall JCM 800 SC20 Full Rig",
+              "similarity": 0.7980378866195679,
+              "tone_id": 29891,
+              "model_id": 127055,
+              "key": "808c7faba7e7cb79"
+            },
+            {
+              "rank": 2,
+              "name": "t3k-32868-153618 Full Rig Peavey 5150 No boost Mesa OS SM57 - jp_is_out_of_tune",
+              "similarity": 0.7795870900154114,
+              "tone_id": 32868,
+              "model_id": 153618,
+              "key": "bdef6e694a49e6a2"
+            },
+            {
+              "rank": 3,
+              "name": "t3k-53952-444151 Series 1 - OD1 G8 V7 Mid Cut Pres Boost - SUM U67 _ SM57 _ R121",
+              "similarity": 0.7737860083580017,
+              "tone_id": 53952,
+              "model_id": 444151,
+              "key": "cc8bf767a7146f23"
+            },
+            {
+              "rank": 4,
+              "name": "t3k-58798-343662 1992 Peavey 5150 Block Letter _ Mesa OS 412 Full Rig __vivahatex_",
+              "similarity": 0.7398044466972351,
+              "tone_id": 58798,
+              "model_id": 343662,
+              "key": "a3e4a35f8a2bdaa3"
+            },
+            {
+              "rank": 5,
+              "name": "t3k-69206-557166 FR MBDR MW Red Mdn - 6 - UR SM57b",
+              "similarity": 0.6794635653495789,
+              "tone_id": 69206,
+              "model_id": 557166,
+              "key": "938acbdcbe563c4a"
+            },
+            {
+              "rank": 6,
+              "name": "t3k-65578-394041 MRSH JM50LD I Crunch2 FAT CAB",
+              "similarity": 0.672938346862793,
+              "tone_id": 65578,
+              "model_id": 394041,
+              "key": "60bfee37c4f0abf2"
+            }
+          ]
+        },
+        "stereo_guitar": {
+          "stem_rms": 0.10994846373796463,
+          "top_six": [
+            {
+              "rank": 1,
+              "name": "t3k-29891-127055 Marshall JCM 800 SC20 Full Rig",
+              "similarity": 0.8077830076217651,
+              "tone_id": 29891,
+              "model_id": 127055,
+              "key": "808c7faba7e7cb79"
+            },
+            {
+              "rank": 2,
+              "name": "t3k-32868-153618 Full Rig Peavey 5150 No boost Mesa OS SM57 - jp_is_out_of_tune",
+              "similarity": 0.7907335162162781,
+              "tone_id": 32868,
+              "model_id": 153618,
+              "key": "bdef6e694a49e6a2"
+            },
+            {
+              "rank": 3,
+              "name": "t3k-53952-444151 Series 1 - OD1 G8 V7 Mid Cut Pres Boost - SUM U67 _ SM57 _ R121",
+              "similarity": 0.7866705656051636,
+              "tone_id": 53952,
+              "model_id": 444151,
+              "key": "cc8bf767a7146f23"
+            },
+            {
+              "rank": 4,
+              "name": "t3k-58798-343662 1992 Peavey 5150 Block Letter _ Mesa OS 412 Full Rig __vivahatex_",
+              "similarity": 0.751883864402771,
+              "tone_id": 58798,
+              "model_id": 343662,
+              "key": "a3e4a35f8a2bdaa3"
+            },
+            {
+              "rank": 5,
+              "name": "t3k-69206-557166 FR MBDR MW Red Mdn - 6 - UR SM57b",
+              "similarity": 0.6944394111633301,
+              "tone_id": 69206,
+              "model_id": 557166,
+              "key": "938acbdcbe563c4a"
+            },
+            {
+              "rank": 6,
+              "name": "t3k-65578-394041 MRSH JM50LD I Crunch2 FAT CAB",
+              "similarity": 0.6857389211654663,
+              "tone_id": 65578,
+              "model_id": 394041,
+              "key": "60bfee37c4f0abf2"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "title": "Metallica-Master Of Puppets (Lyrics)",
+      "url": "https://www.youtube.com/watch?v=xnKhsTXoKCI",
+      "start_seconds": 22.0,
+      "end_seconds": 60.0,
+      "original_channels": 2,
+      "channel_correlation": 0.5641563853288719,
+      "separation_stem_rms": {
+        "bass": 0.040155328810214996,
+        "drums": 0.10206440836191177,
+        "other": 0.00014670573000330478,
+        "vocals": 0.00016001073527149856,
+        "guitar": 0.13677053153514862,
+        "piano": 0.0001681830472080037
+      },
+      "variants": {
+        "old_mono_guitar": {
+          "stem_rms": 0.09271470457315445,
+          "top_six": [
+            {
+              "rank": 1,
+              "name": "t3k-28202-110848 Ampeg SVT - Ultra Lo MD 421",
+              "similarity": 0.5867248773574829,
+              "tone_id": 28202,
+              "model_id": 110848,
+              "key": "28adb2865a2af93a"
+            },
+            {
+              "rank": 2,
+              "name": "t3k-10912-83328 Roland JC 120B Jazz Chorus_ Bright On_ SM57",
+              "similarity": 0.5489673614501953,
+              "tone_id": 10912,
+              "model_id": 83328,
+              "key": "a0af9c5e6688cd0d"
+            },
+            {
+              "rank": 3,
+              "name": "t3k-19-56 Fender Super Reverb_ EQ Flat_ Volume 3_ sm57 and AKG 414",
+              "similarity": 0.5154815316200256,
+              "tone_id": 19,
+              "model_id": 56,
+              "key": "6d66fd4d2910349e"
+            },
+            {
+              "rank": 4,
+              "name": "t3k-51649-289460 NEW VERSION _ Fender DRRI _ Clean _ SM57 _ Royer R-121 _ Room _ Full Rig",
+              "similarity": 0.47475773096084595,
+              "tone_id": 51649,
+              "model_id": 289460,
+              "key": "4db8ea128567144e"
+            },
+            {
+              "rank": 5,
+              "name": "t3k-35497-168768 FENDER TWIN CAP EDGE U67_R121 _1000 Epoch_",
+              "similarity": 0.46988391876220703,
+              "tone_id": 35497,
+              "model_id": 168768,
+              "key": "1c71096746649578"
+            },
+            {
+              "rank": 6,
+              "name": "t3k-55360-316158 FNDR BFPRO VB Clean2 WRM CAB",
+              "similarity": 0.2926604151725769,
+              "tone_id": 55360,
+              "model_id": 316158,
+              "key": "ef34f639bbd84d72"
+            }
+          ]
+        },
+        "stereo_guitar_folded": {
+          "stem_rms": 0.1083829402923584,
+          "top_six": [
+            {
+              "rank": 1,
+              "name": "t3k-29891-127055 Marshall JCM 800 SC20 Full Rig",
+              "similarity": 0.7821174263954163,
+              "tone_id": 29891,
+              "model_id": 127055,
+              "key": "808c7faba7e7cb79"
+            },
+            {
+              "rank": 2,
+              "name": "t3k-53952-444151 Series 1 - OD1 G8 V7 Mid Cut Pres Boost - SUM U67 _ SM57 _ R121",
+              "similarity": 0.7725214958190918,
+              "tone_id": 53952,
+              "model_id": 444151,
+              "key": "cc8bf767a7146f23"
+            },
+            {
+              "rank": 3,
+              "name": "t3k-32868-153618 Full Rig Peavey 5150 No boost Mesa OS SM57 - jp_is_out_of_tune",
+              "similarity": 0.7707011699676514,
+              "tone_id": 32868,
+              "model_id": 153618,
+              "key": "bdef6e694a49e6a2"
+            },
+            {
+              "rank": 4,
+              "name": "t3k-58798-343662 1992 Peavey 5150 Block Letter _ Mesa OS 412 Full Rig __vivahatex_",
+              "similarity": 0.7350909113883972,
+              "tone_id": 58798,
+              "model_id": 343662,
+              "key": "a3e4a35f8a2bdaa3"
+            },
+            {
+              "rank": 5,
+              "name": "t3k-69206-557166 FR MBDR MW Red Mdn - 6 - UR SM57b",
+              "similarity": 0.6692517399787903,
+              "tone_id": 69206,
+              "model_id": 557166,
+              "key": "938acbdcbe563c4a"
+            },
+            {
+              "rank": 6,
+              "name": "t3k-66349-406242 Metalcore Heaven",
+              "similarity": 0.668993353843689,
+              "tone_id": 66349,
+              "model_id": 406242,
+              "key": "8295ae072832f51f"
+            }
+          ]
+        },
+        "stereo_guitar": {
+          "stem_rms": 0.13677053153514862,
+          "top_six": [
+            {
+              "rank": 1,
+              "name": "t3k-29891-127055 Marshall JCM 800 SC20 Full Rig",
+              "similarity": 0.7951299548149109,
+              "tone_id": 29891,
+              "model_id": 127055,
+              "key": "808c7faba7e7cb79"
+            },
+            {
+              "rank": 2,
+              "name": "t3k-53952-444151 Series 1 - OD1 G8 V7 Mid Cut Pres Boost - SUM U67 _ SM57 _ R121",
+              "similarity": 0.7894874811172485,
+              "tone_id": 53952,
+              "model_id": 444151,
+              "key": "cc8bf767a7146f23"
+            },
+            {
+              "rank": 3,
+              "name": "t3k-32868-153618 Full Rig Peavey 5150 No boost Mesa OS SM57 - jp_is_out_of_tune",
+              "similarity": 0.7856529951095581,
+              "tone_id": 32868,
+              "model_id": 153618,
+              "key": "bdef6e694a49e6a2"
+            },
+            {
+              "rank": 4,
+              "name": "t3k-58798-343662 1992 Peavey 5150 Block Letter _ Mesa OS 412 Full Rig __vivahatex_",
+              "similarity": 0.7507891654968262,
+              "tone_id": 58798,
+              "model_id": 343662,
+              "key": "a3e4a35f8a2bdaa3"
+            },
+            {
+              "rank": 5,
+              "name": "t3k-69206-557166 FR MBDR MW Red Mdn - 6 - UR SM57b",
+              "similarity": 0.6885194778442383,
+              "tone_id": 69206,
+              "model_id": 557166,
+              "key": "938acbdcbe563c4a"
+            },
+            {
+              "rank": 6,
+              "name": "t3k-66349-406242 Metalcore Heaven",
+              "similarity": 0.6794767379760742,
+              "tone_id": 66349,
+              "model_id": 406242,
+              "key": "8295ae072832f51f"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "title": "For Whom The Bell Tolls (Remastered)",
+      "url": "https://www.youtube.com/watch?v=B_HSa1dEL9s",
+      "start_seconds": 60.0,
+      "end_seconds": 98.0,
+      "original_channels": 2,
+      "channel_correlation": 0.40430770672119637,
+      "separation_stem_rms": {
+        "bass": 0.0801568254828453,
+        "drums": 0.12257730215787888,
+        "other": 0.048588093370199203,
+        "vocals": 0.011440692469477654,
+        "guitar": 0.13623295724391937,
+        "piano": 0.00021501588344108313
+      },
+      "variants": {
+        "old_mono_guitar": {
+          "stem_rms": 0.00688606221228838,
+          "top_six": [
+            {
+              "rank": 1,
+              "name": "t3k-28202-110848 Ampeg SVT - Ultra Lo MD 421",
+              "similarity": 0.5112002491950989,
+              "tone_id": 28202,
+              "model_id": 110848,
+              "key": "28adb2865a2af93a"
+            },
+            {
+              "rank": 2,
+              "name": "t3k-10912-83328 Roland JC 120B Jazz Chorus_ Bright On_ SM57",
+              "similarity": 0.4989500641822815,
+              "tone_id": 10912,
+              "model_id": 83328,
+              "key": "a0af9c5e6688cd0d"
+            },
+            {
+              "rank": 3,
+              "name": "t3k-19-56 Fender Super Reverb_ EQ Flat_ Volume 3_ sm57 and AKG 414",
+              "similarity": 0.4481865167617798,
+              "tone_id": 19,
+              "model_id": 56,
+              "key": "6d66fd4d2910349e"
+            },
+            {
+              "rank": 4,
+              "name": "t3k-35497-168768 FENDER TWIN CAP EDGE U67_R121 _1000 Epoch_",
+              "similarity": 0.3931977152824402,
+              "tone_id": 35497,
+              "model_id": 168768,
+              "key": "1c71096746649578"
+            },
+            {
+              "rank": 5,
+              "name": "t3k-51649-289460 NEW VERSION _ Fender DRRI _ Clean _ SM57 _ Royer R-121 _ Room _ Full Rig",
+              "similarity": 0.3897397220134735,
+              "tone_id": 51649,
+              "model_id": 289460,
+              "key": "4db8ea128567144e"
+            },
+            {
+              "rank": 6,
+              "name": "t3k-55360-316158 FNDR BFPRO VB Clean2 WRM CAB",
+              "similarity": 0.20658007264137268,
+              "tone_id": 55360,
+              "model_id": 316158,
+              "key": "ef34f639bbd84d72"
+            }
+          ]
+        },
+        "stereo_guitar_folded": {
+          "stem_rms": 0.09447290748357773,
+          "top_six": [
+            {
+              "rank": 1,
+              "name": "t3k-53952-444151 Series 1 - OD1 G8 V7 Mid Cut Pres Boost - SUM U67 _ SM57 _ R121",
+              "similarity": 0.4880387783050537,
+              "tone_id": 53952,
+              "model_id": 444151,
+              "key": "cc8bf767a7146f23"
+            },
+            {
+              "rank": 2,
+              "name": "t3k-32868-153618 Full Rig Peavey 5150 No boost Mesa OS SM57 - jp_is_out_of_tune",
+              "similarity": 0.4442911446094513,
+              "tone_id": 32868,
+              "model_id": 153618,
+              "key": "bdef6e694a49e6a2"
+            },
+            {
+              "rank": 3,
+              "name": "t3k-58798-343662 1992 Peavey 5150 Block Letter _ Mesa OS 412 Full Rig __vivahatex_",
+              "similarity": 0.3990149199962616,
+              "tone_id": 58798,
+              "model_id": 343662,
+              "key": "a3e4a35f8a2bdaa3"
+            },
+            {
+              "rank": 4,
+              "name": "t3k-29891-127055 Marshall JCM 800 SC20 Full Rig",
+              "similarity": 0.37813422083854675,
+              "tone_id": 29891,
+              "model_id": 127055,
+              "key": "808c7faba7e7cb79"
+            },
+            {
+              "rank": 5,
+              "name": "t3k-66349-406242 Metalcore Heaven",
+              "similarity": 0.374359667301178,
+              "tone_id": 66349,
+              "model_id": 406242,
+              "key": "8295ae072832f51f"
+            },
+            {
+              "rank": 6,
+              "name": "t3k-65578-394041 MRSH JM50LD I Crunch2 FAT CAB",
+              "similarity": 0.3358561098575592,
+              "tone_id": 65578,
+              "model_id": 394041,
+              "key": "60bfee37c4f0abf2"
+            }
+          ]
+        },
+        "stereo_guitar": {
+          "stem_rms": 0.13623295724391937,
+          "top_six": [
+            {
+              "rank": 1,
+              "name": "t3k-53952-444151 Series 1 - OD1 G8 V7 Mid Cut Pres Boost - SUM U67 _ SM57 _ R121",
+              "similarity": 0.42757925391197205,
+              "tone_id": 53952,
+              "model_id": 444151,
+              "key": "cc8bf767a7146f23"
+            },
+            {
+              "rank": 2,
+              "name": "t3k-32868-153618 Full Rig Peavey 5150 No boost Mesa OS SM57 - jp_is_out_of_tune",
+              "similarity": 0.3920968770980835,
+              "tone_id": 32868,
+              "model_id": 153618,
+              "key": "bdef6e694a49e6a2"
+            },
+            {
+              "rank": 3,
+              "name": "t3k-58798-343662 1992 Peavey 5150 Block Letter _ Mesa OS 412 Full Rig __vivahatex_",
+              "similarity": 0.3446560502052307,
+              "tone_id": 58798,
+              "model_id": 343662,
+              "key": "a3e4a35f8a2bdaa3"
+            },
+            {
+              "rank": 4,
+              "name": "t3k-29891-127055 Marshall JCM 800 SC20 Full Rig",
+              "similarity": 0.32813185453414917,
+              "tone_id": 29891,
+              "model_id": 127055,
+              "key": "808c7faba7e7cb79"
+            },
+            {
+              "rank": 5,
+              "name": "t3k-66349-406242 Metalcore Heaven",
+              "similarity": 0.3193950653076172,
+              "tone_id": 66349,
+              "model_id": 406242,
+              "key": "8295ae072832f51f"
+            },
+            {
+              "rank": 6,
+              "name": "t3k-65578-394041 MRSH JM50LD I Crunch2 FAT CAB",
+              "similarity": 0.27267786860466003,
+              "tone_id": 65578,
+              "model_id": 394041,
+              "key": "60bfee37c4f0abf2"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "title": "Periphery - Marigold (Guitar Playthrough)",
+      "url": "https://www.youtube.com/watch?v=zBWURleQuLc",
+      "start_seconds": 60.0,
+      "end_seconds": 98.0,
+      "original_channels": 2,
+      "channel_correlation": 0.6618362198224943,
+      "separation_stem_rms": {
+        "bass": 0.1182422861456871,
+        "drums": 0.140438973903656,
+        "other": 0.02456149086356163,
+        "vocals": 0.016643397510051727,
+        "guitar": 0.1544012725353241,
+        "piano": 0.0002477777888998389
+      },
+      "variants": {
+        "old_mono_guitar": {
+          "stem_rms": 0.11534585058689117,
+          "top_six": [
+            {
+              "rank": 1,
+              "name": "t3k-53952-444151 Series 1 - OD1 G8 V7 Mid Cut Pres Boost - SUM U67 _ SM57 _ R121",
+              "similarity": 0.7543402314186096,
+              "tone_id": 53952,
+              "model_id": 444151,
+              "key": "cc8bf767a7146f23"
+            },
+            {
+              "rank": 2,
+              "name": "t3k-58798-343662 1992 Peavey 5150 Block Letter _ Mesa OS 412 Full Rig __vivahatex_",
+              "similarity": 0.6951674222946167,
+              "tone_id": 58798,
+              "model_id": 343662,
+              "key": "a3e4a35f8a2bdaa3"
+            },
+            {
+              "rank": 3,
+              "name": "t3k-32868-153618 Full Rig Peavey 5150 No boost Mesa OS SM57 - jp_is_out_of_tune",
+              "similarity": 0.6851962208747864,
+              "tone_id": 32868,
+              "model_id": 153618,
+              "key": "bdef6e694a49e6a2"
+            },
+            {
+              "rank": 4,
+              "name": "t3k-66349-406242 Metalcore Heaven",
+              "similarity": 0.6660734415054321,
+              "tone_id": 66349,
+              "model_id": 406242,
+              "key": "8295ae072832f51f"
+            },
+            {
+              "rank": 5,
+              "name": "t3k-41359-351347 _AMP_ BE100DLX-BE TEST BLEND - STD",
+              "similarity": 0.6630757451057434,
+              "tone_id": 41359,
+              "model_id": 351347,
+              "key": "5de5dfa85cfa0139"
+            },
+            {
+              "rank": 6,
+              "name": "t3k-69206-557166 FR MBDR MW Red Mdn - 6 - UR SM57b",
+              "similarity": 0.6558418869972229,
+              "tone_id": 69206,
+              "model_id": 557166,
+              "key": "938acbdcbe563c4a"
+            }
+          ]
+        },
+        "stereo_guitar_folded": {
+          "stem_rms": 0.12758296728134155,
+          "top_six": [
+            {
+              "rank": 1,
+              "name": "t3k-53952-444151 Series 1 - OD1 G8 V7 Mid Cut Pres Boost - SUM U67 _ SM57 _ R121",
+              "similarity": 0.7450606226921082,
+              "tone_id": 53952,
+              "model_id": 444151,
+              "key": "cc8bf767a7146f23"
+            },
+            {
+              "rank": 2,
+              "name": "t3k-58798-343662 1992 Peavey 5150 Block Letter _ Mesa OS 412 Full Rig __vivahatex_",
+              "similarity": 0.6833353042602539,
+              "tone_id": 58798,
+              "model_id": 343662,
+              "key": "a3e4a35f8a2bdaa3"
+            },
+            {
+              "rank": 3,
+              "name": "t3k-41359-351347 _AMP_ BE100DLX-BE TEST BLEND - STD",
+              "similarity": 0.6718536615371704,
+              "tone_id": 41359,
+              "model_id": 351347,
+              "key": "5de5dfa85cfa0139"
+            },
+            {
+              "rank": 4,
+              "name": "t3k-32868-153618 Full Rig Peavey 5150 No boost Mesa OS SM57 - jp_is_out_of_tune",
+              "similarity": 0.6672737002372742,
+              "tone_id": 32868,
+              "model_id": 153618,
+              "key": "bdef6e694a49e6a2"
+            },
+            {
+              "rank": 5,
+              "name": "t3k-66349-406242 Metalcore Heaven",
+              "similarity": 0.6559745073318481,
+              "tone_id": 66349,
+              "model_id": 406242,
+              "key": "8295ae072832f51f"
+            },
+            {
+              "rank": 6,
+              "name": "t3k-69206-557166 FR MBDR MW Red Mdn - 6 - UR SM57b",
+              "similarity": 0.6542797088623047,
+              "tone_id": 69206,
+              "model_id": 557166,
+              "key": "938acbdcbe563c4a"
+            }
+          ]
+        },
+        "stereo_guitar": {
+          "stem_rms": 0.1544012725353241,
+          "top_six": [
+            {
+              "rank": 1,
+              "name": "t3k-53952-444151 Series 1 - OD1 G8 V7 Mid Cut Pres Boost - SUM U67 _ SM57 _ R121",
+              "similarity": 0.7805143594741821,
+              "tone_id": 53952,
+              "model_id": 444151,
+              "key": "cc8bf767a7146f23"
+            },
+            {
+              "rank": 2,
+              "name": "t3k-58798-343662 1992 Peavey 5150 Block Letter _ Mesa OS 412 Full Rig __vivahatex_",
+              "similarity": 0.722604513168335,
+              "tone_id": 58798,
+              "model_id": 343662,
+              "key": "a3e4a35f8a2bdaa3"
+            },
+            {
+              "rank": 3,
+              "name": "t3k-32868-153618 Full Rig Peavey 5150 No boost Mesa OS SM57 - jp_is_out_of_tune",
+              "similarity": 0.7087317705154419,
+              "tone_id": 32868,
+              "model_id": 153618,
+              "key": "bdef6e694a49e6a2"
+            },
+            {
+              "rank": 4,
+              "name": "t3k-69206-557166 FR MBDR MW Red Mdn - 6 - UR SM57b",
+              "similarity": 0.6979776620864868,
+              "tone_id": 69206,
+              "model_id": 557166,
+              "key": "938acbdcbe563c4a"
+            },
+            {
+              "rank": 5,
+              "name": "t3k-41359-351347 _AMP_ BE100DLX-BE TEST BLEND - STD",
+              "similarity": 0.6976805925369263,
+              "tone_id": 41359,
+              "model_id": 351347,
+              "key": "5de5dfa85cfa0139"
+            },
+            {
+              "rank": 6,
+              "name": "t3k-66349-406242 Metalcore Heaven",
+              "similarity": 0.6908670663833618,
+              "tone_id": 66349,
+              "model_id": 406242,
+              "key": "8295ae072832f51f"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "diagnostic_tool": "engine/tools/diagnose_reference.py",
+  "diagnostic_tool_sha256": "bf10346051f9c1a094b50391246609797f40d134af19f106f869486a506ec64c",
+  "local_full_reports": [
+    ".cache/reference_diagnostics/report.json",
+    ".cache/reference_diagnostics_controls/report.json"
+  ],
+  "validation": {
+    "python": "592 passed; docs/test_suite_stereo.txt",
+    "native": "Stereo import/playback, native crop 22-60, match and automatic JCM800 load passed; docs/native_stereo_validation.txt",
+    "vst3": "pluginval strictness 5 passed; docs/pluginval-stereo.txt",
+    "audio_state": "Native NAM audio and state checks passed; docs/native_audio_validation_stereo.txt",
+    "visual": "Whole photo checked against cached source JPEG; docs/native-stereo-ui.png"
+  }
+}

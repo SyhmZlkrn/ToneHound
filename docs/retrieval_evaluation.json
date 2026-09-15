@@ -1,0 +1,375 @@
+{
+  "version": 1,
+  "captures": 51,
+  "encoder_key": "bd125d057e7df98d",
+  "trained": "supervised regularised retrieval projection; MERT backbone frozen",
+  "selection": "validation separated top-5, then MRR; test never used to tune strength",
+  "strength": 100.0,
+  "validation_candidates": [
+    {
+      "strength": 0.0,
+      "queries": 102,
+      "top1": 0.2549019607843137,
+      "top5": 0.6176470588235294,
+      "top10": 0.7647058823529411,
+      "mrr": 0.41166867187018324,
+      "median_rank": 3.0,
+      "separation_failures": 0
+    },
+    {
+      "strength": 0.1,
+      "queries": 102,
+      "top1": 0.27450980392156865,
+      "top5": 0.5980392156862745,
+      "top10": 0.7843137254901961,
+      "mrr": 0.43460145121641364,
+      "median_rank": 3.5,
+      "separation_failures": 0
+    },
+    {
+      "strength": 1.0,
+      "queries": 102,
+      "top1": 0.4019607843137255,
+      "top5": 0.6568627450980392,
+      "top10": 0.8529411764705882,
+      "mrr": 0.5259076952459306,
+      "median_rank": 3.0,
+      "separation_failures": 0
+    },
+    {
+      "strength": 10.0,
+      "queries": 102,
+      "top1": 0.4411764705882353,
+      "top5": 0.7254901960784313,
+      "top10": 0.8823529411764706,
+      "mrr": 0.57260091440303,
+      "median_rank": 2.0,
+      "separation_failures": 0
+    },
+    {
+      "strength": 100.0,
+      "queries": 102,
+      "top1": 0.45098039215686275,
+      "top5": 0.7745098039215687,
+      "top10": 0.9117647058823529,
+      "mrr": 0.5974725075215273,
+      "median_rank": 2.0,
+      "separation_failures": 0
+    }
+  ],
+  "takes": [
+    {
+      "name": "Djent DI",
+      "split": "train",
+      "sha256": "7338716a3c9594bebba1b34f47ff5694f114fbdedc52e3186dab79d334ba14b2",
+      "audio_sha256": "ac445a874e06f107d19ff068946a4616587e0882abf438f71566dc99e0d8891c"
+    },
+    {
+      "name": "Funk DI",
+      "split": "train",
+      "sha256": "7238b81cc2570cbb5e5994a4fcc3b5c19e5a8105177f634d8a2e680a65bd09e6",
+      "audio_sha256": "5d4d5eddedb7f2b766fa998dc7ce98a57398d5446ec7a7812a0c7a34fed63946"
+    },
+    {
+      "name": "Thall DI",
+      "split": "validation",
+      "sha256": "a14922bff2c81353553eb882014c80e1b5b75ba8c6b464d3dad6f1a82aaf88a1",
+      "audio_sha256": "46282961cf1fed50450b9468ce2bd2685f25797e3d75155660586b13c8b1d0fc"
+    },
+    {
+      "name": "Baritone DI",
+      "split": "test",
+      "sha256": "33e8a8e70a321a61614789a7e11171da4a95169f2cb1d3cc765610bfbb0d67aa",
+      "audio_sha256": "fda1a7e38c948533f2f0c9b2a9784f92521893f0c1cf2e64f4ea562297c59b0a"
+    }
+  ],
+  "conditions": "Known NAM guitar + real song drum/bass/vocal stems, EQ/limiting, MP3, htdemucs_6s; DI and backing songs held out together",
+  "test": {
+    "single_di": {
+      "all": {
+        "queries": 306,
+        "top1": 0.39215686274509803,
+        "top5": 0.7287581699346405,
+        "top10": 0.8235294117647058,
+        "mrr": 0.5416880818311515,
+        "median_rank": 2.0,
+        "separation_failures": 0
+      },
+      "clean": {
+        "queries": 102,
+        "top1": 0.5196078431372549,
+        "top5": 0.9019607843137255,
+        "top10": 0.9705882352941176,
+        "mrr": 0.6771002418061242,
+        "median_rank": 1.0,
+        "separation_failures": 0
+      },
+      "mastered": {
+        "queries": 102,
+        "top1": 0.4411764705882353,
+        "top5": 0.8627450980392157,
+        "top10": 0.9509803921568627,
+        "mrr": 0.6186165278077043,
+        "median_rank": 2.0,
+        "separation_failures": 0
+      },
+      "separated": {
+        "queries": 102,
+        "top1": 0.21568627450980393,
+        "top5": 0.4215686274509804,
+        "top10": 0.5490196078431373,
+        "mrr": 0.32934747587962593,
+        "median_rank": 9.0,
+        "separation_failures": 0
+      }
+    },
+    "multi_di": {
+      "all": {
+        "queries": 306,
+        "top1": 0.38235294117647056,
+        "top5": 0.6111111111111112,
+        "top10": 0.7516339869281046,
+        "mrr": 0.5014081259658397,
+        "median_rank": 3.0,
+        "separation_failures": 0
+      },
+      "clean": {
+        "queries": 102,
+        "top1": 0.4117647058823529,
+        "top5": 0.7058823529411765,
+        "top10": 0.8823529411764706,
+        "mrr": 0.5570568518106882,
+        "median_rank": 2.0,
+        "separation_failures": 0
+      },
+      "mastered": {
+        "queries": 102,
+        "top1": 0.4411764705882353,
+        "top5": 0.696078431372549,
+        "top10": 0.8725490196078431,
+        "mrr": 0.5705782688625826,
+        "median_rank": 2.0,
+        "separation_failures": 0
+      },
+      "separated": {
+        "queries": 102,
+        "top1": 0.29411764705882354,
+        "top5": 0.43137254901960786,
+        "top10": 0.5,
+        "mrr": 0.37658925722424835,
+        "median_rank": 10.5,
+        "separation_failures": 0
+      }
+    },
+    "selected": {
+      "all": {
+        "queries": 306,
+        "top1": 0.5718954248366013,
+        "top5": 0.7712418300653595,
+        "top10": 0.8496732026143791,
+        "mrr": 0.6632892609466835,
+        "median_rank": 1.0,
+        "separation_failures": 0
+      },
+      "clean": {
+        "queries": 102,
+        "top1": 0.7156862745098039,
+        "top5": 0.9215686274509803,
+        "top10": 0.9901960784313726,
+        "mrr": 0.8052112511671335,
+        "median_rank": 1.0,
+        "separation_failures": 0
+      },
+      "mastered": {
+        "queries": 102,
+        "top1": 0.6666666666666666,
+        "top5": 0.9019607843137255,
+        "top10": 0.9901960784313726,
+        "mrr": 0.7694561157796451,
+        "median_rank": 1.0,
+        "separation_failures": 0
+      },
+      "separated": {
+        "queries": 102,
+        "top1": 0.3333333333333333,
+        "top5": 0.49019607843137253,
+        "top10": 0.5686274509803921,
+        "mrr": 0.4152004158932719,
+        "median_rank": 6.0,
+        "separation_failures": 0
+      }
+    }
+  },
+  "previous_active_test": {
+    "clean": {
+      "queries": 102,
+      "top1": 0.7156862745098039,
+      "top5": 0.9509803921568627,
+      "top10": 1.0,
+      "mrr": 0.8239729225023342,
+      "median_rank": 1.0,
+      "separation_failures": 0
+    },
+    "mastered": {
+      "queries": 102,
+      "top1": 0.7058823529411765,
+      "top5": 0.9509803921568627,
+      "top10": 1.0,
+      "mrr": 0.8043689698101462,
+      "median_rank": 1.0,
+      "separation_failures": 0
+    },
+    "separated": {
+      "queries": 102,
+      "top1": 0.3333333333333333,
+      "top5": 0.5,
+      "top10": 0.6176470588235294,
+      "mrr": 0.4249018613436472,
+      "median_rank": 5.5,
+      "separation_failures": 0
+    }
+  },
+  "activation_passed": false,
+  "training_date": "2026-09-15",
+  "review_date": "2026-09-16",
+  "active_model": "clean multi-DI projection; separation candidate not activated",
+  "songs": [
+    {
+      "name": "D'Masiv - Cinta Ini Membunuhku (Lyrics).mp3",
+      "split": "train",
+      "sha256": "4bf5beb9cd9278ef265c6bae6349928c9b3c56b06f727664c9ae949c1cd21a3b",
+      "start_s": "40"
+    },
+    {
+      "name": "Karmanjakah - Diamond train - Karmanjakah.mp3",
+      "split": "validation",
+      "sha256": "3d6c82d53105eb23f779f02ca78150a51ba6589cef867e57f5791ddb28d4cbd7",
+      "start_s": "40"
+    },
+    {
+      "name": "Loathe - Fangs (Official Music Video) [8JefYd7TBck].mp3",
+      "split": "train",
+      "sha256": "23a1dd1a611b4766a4c126e1818e8c11690ef9888770a85fa34516965fcfbf38",
+      "start_s": "40"
+    },
+    {
+      "name": "Panah Asmara - Afgan (KARAOKE VERSION).mp3",
+      "split": "test",
+      "sha256": "12a707dc83da4bdb2adade5c4733968580865a9455db0450a9561edf3cd2aecc",
+      "start_s": "40"
+    },
+    {
+      "name": "Periphery - Garden In The Bones (Audio).mp3",
+      "split": "train",
+      "sha256": "7258171ba2a89ed57ec9df7b45876a4af79ad407847696285f34e7422f18c7f2",
+      "start_s": "40"
+    },
+    {
+      "name": "PERIPHERY - The Bad Thing.mp3",
+      "split": "train",
+      "sha256": "d4244c9b83e1b73063be497644bcdf88fde10bd52f65bd2b153dea85b2275870",
+      "start_s": "40"
+    },
+    {
+      "name": "Spiritbox - Tsunami Sea (Official Visualizer) - riserecords.mp3",
+      "split": "test",
+      "sha256": "e90f2989e0927950086f889e41c281b5c15ca6163e6366afc21ec0b1e2316d77",
+      "start_s": "40"
+    }
+  ],
+  "separation_counts": [
+    {
+      "split": "test",
+      "stem": "guitar",
+      "examples": 98
+    },
+    {
+      "split": "test",
+      "stem": "other",
+      "examples": 4
+    },
+    {
+      "split": "train",
+      "stem": "failed",
+      "examples": 1
+    },
+    {
+      "split": "train",
+      "stem": "guitar",
+      "examples": 203
+    },
+    {
+      "split": "validation",
+      "stem": "guitar",
+      "examples": 102
+    }
+  ],
+  "runtime": {
+    "numpy": "2.2.6",
+    "torch": "2.11.0+cu128",
+    "transformers": "5.16.1",
+    "audio-separator": "0.47.0",
+    "demucs": "No standalone distribution metadata; used through audio-separator",
+    "soundfile": "0.14.0"
+  },
+  "deployed_baseline_check": {
+    "deployed_single_di": {
+      "clean": {
+        "queries": 102,
+        "top1": 0.5196078431372549,
+        "top5": 0.8627450980392157,
+        "top10": 0.9313725490196079,
+        "mrr": 0.6530501991415304,
+        "median_rank": 1.0,
+        "separation_failures": 0
+      },
+      "mastered": {
+        "queries": 102,
+        "top1": 0.4019607843137255,
+        "top5": 0.803921568627451,
+        "top10": 0.9215686274509803,
+        "mrr": 0.5687136428815995,
+        "median_rank": 2.0,
+        "separation_failures": 0
+      },
+      "separated": {
+        "queries": 102,
+        "top1": 0.23529411764705882,
+        "top5": 0.43137254901960786,
+        "top10": 0.5294117647058824,
+        "mrr": 0.34148051292065695,
+        "median_rank": 8.5,
+        "separation_failures": 0
+      }
+    },
+    "active_multi_di": {
+      "clean": {
+        "queries": 102,
+        "top1": 0.7156862745098039,
+        "top5": 0.9509803921568627,
+        "top10": 1.0,
+        "mrr": 0.8239729225023342,
+        "median_rank": 1.0,
+        "separation_failures": 0
+      },
+      "mastered": {
+        "queries": 102,
+        "top1": 0.7058823529411765,
+        "top5": 0.9509803921568627,
+        "top10": 1.0,
+        "mrr": 0.8043689698101462,
+        "median_rank": 1.0,
+        "separation_failures": 0
+      },
+      "separated": {
+        "queries": 102,
+        "top1": 0.3333333333333333,
+        "top5": 0.5,
+        "top10": 0.6176470588235294,
+        "mrr": 0.4249018613436472,
+        "median_rank": 5.5,
+        "separation_failures": 0
+      }
+    }
+  }
+}
