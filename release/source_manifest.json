@@ -5,7 +5,8 @@
     ".gitignore", ".env.example", "README.md", "requirements-*.txt", "pytest.ini",
     "release/*.json", "scripts/*.py", "scripts/*.ps1", "scripts/tests/*.py",
     "native/CMakeLists.txt", "native/*.ps1", "native/README.md", "native/THIRD_PARTY.md", "native/Source/*.h", "native/Source/*.cpp",
-    "engine/tonehound/*.py", "engine/tests/*.py", "engine/tools/*.py", "engine/live/*.py", "engine/live/ui/*",
+    "engine/tonehound/*.py", "engine/tests/*.py", "engine/tools/*.py", "engine/live/*.py", "engine/live/ui/*", "engine/live/ui/css/*.css", "engine/live/ui/js/*.js",
+    "engine/training/*.py", "engine/training/native/CMakeLists.txt", "configs/*.yaml", "configs/*.example.json", "notebooks/*.ipynb",
     "assets/user_di/README.md", "docs/*.md", "docs/stereo_matching_regression.json", "docs/retrieval_evaluation.json"
   ],
   "exclude": ["engine/tools/scratch_*.py"],

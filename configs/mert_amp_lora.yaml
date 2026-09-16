@@ -1,0 +1,27 @@
+# Phase 2: smaller MERT, low-rank updates in its last two used blocks.
+schema: 1
+seed: 719
+model:
+  id: m-a-p/MERT-v1-95M
+  revision: 12af15fef9d0ac838c3f475bfbbf26d2060dd4f5
+  mode: lora
+  layers: [9, 10, 11, 12]
+  train_blocks: 2
+  lora_rank: 8
+  lora_alpha: 16
+  gradient_checkpointing: true
+  head_hidden: 256
+  embedding_dim: 128
+training:
+  epochs: 20
+  classes_per_batch: 4
+  takes_per_class: 2
+  steps_per_epoch: 0
+  accumulation: 1
+  learning_rate: 0.0001
+  weight_decay: 0.0001
+  temperature: 0.1
+  max_grad_norm: 1.0
+  precision: float16
+  eval_batch_size: 2
+  checkpoint_every_steps: 20

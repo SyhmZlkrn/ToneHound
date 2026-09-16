@@ -19,6 +19,16 @@ descriptor catalogue and managed NAM cache support larger libraries without
 installing every model. See [the studio guide](docs/STUDIO_FEATURES.md) and
 [catalogue/MERT design](docs/CATALOGUE_AND_MERT.md).
 
+## Train a larger matching model
+
+Use the [Colab/Kaggle training walkthrough](docs/CLOUD_TRAINING.md) to prepare
+full-rig captures with multiple independent DI performances, train a contrastive
+MERT head or fine-tune MERT, and evaluate against a frozen baseline. The dataset
+and checkpoints stay in private storage. The current desktop matcher remains
+unchanged until a trained candidate has been evaluated and integrated.
+
+[Open the Colab notebook](https://colab.research.google.com/github/SyhmZlkrn/ToneHound/blob/main/notebooks/ToneHound_Colab.ipynb)
+
 ## Run the current development build
 
 Open `dist/ToneHound/ToneHound.exe`. Choose your interface in **I / O**, select

@@ -1,0 +1,20 @@
+cmake_minimum_required(VERSION 3.24)
+project(ToneHoundTrainingRenderer LANGUAGES C CXX)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+if(NOT EXISTS "${NAM_CORE_ROOT}/NAM/get_dsp.h")
+  message(FATAL_ERROR "Set NAM_CORE_ROOT to the pinned NeuralAmpModelerCore checkout")
+endif()
+file(GLOB NAM_SOURCES CONFIGURE_DEPENDS "${NAM_CORE_ROOT}/NAM/*.cpp" "${NAM_CORE_ROOT}/NAM/*.c" "${NAM_CORE_ROOT}/NAM/*/*.cpp")
+# Use upstream's renderer and DSP without its compiler-specific tool flags.
+add_executable(render "${NAM_CORE_ROOT}/tools/render.cpp" ${NAM_SOURCES}
+  "${NAM_CORE_ROOT}/Dependencies/AudioDSPTools/dsp/wav.cpp")
+target_include_directories(render SYSTEM PRIVATE "${NAM_CORE_ROOT}" "${NAM_CORE_ROOT}/Dependencies/eigen"
+  "${NAM_CORE_ROOT}/Dependencies/nlohmann" "${NAM_CORE_ROOT}/Dependencies/AudioDSPTools/dsp")
+target_compile_definitions(render PRIVATE NAM_ENABLE_A2_FAST NOMINMAX WIN32_LEAN_AND_MEAN)
+if(MSVC)
+  target_compile_options(render PRIVATE /O2)
+else()
+  target_compile_options(render PRIVATE -O3)
+endif()

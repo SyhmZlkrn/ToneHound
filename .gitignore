@@ -7,6 +7,11 @@
 /.venv-*/
 /dist/
 /release-export/
+/datasets/
+/experiments/
+/checkpoints/
+/models/
+**/.ipynb_checkpoints/
 /HANDOFF.md
 /.env
 /.env.*
@@ -59,6 +64,7 @@
 /docs/*.json
 /docs/*.png
 /docs/*.jpg
+*.ckpt
 !/docs/stereo_matching_regression.json
 !/docs/retrieval_evaluation.json
 !/docs/storage_audit.json

@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "source_root": ".",
+  "render": {
+    "seconds": 5,
+    "starts_s": [0],
+    "input_gains_db": [0]
+  },
+  "profiles": [
+    {
+      "id": "rig-001",
+      "path": "nam/your-first-full-rig.nam",
+      "rig": "full-rig",
+      "cabinet_included": true,
+      "rig_evidence": "Replace with creator description or verified capture notes",
+      "training_use_authorized": false,
+      "amp_family": "unknown",
+      "gain_class": "unknown",
+      "manufacturer": "unknown",
+      "model": "unknown",
+      "cabinet": "unknown",
+      "creator": "unknown",
+      "license": "unknown"
+    },
+    {
+      "id": "rig-002",
+      "path": "nam/your-second-full-rig.nam",
+      "rig": "full-rig",
+      "cabinet_included": true,
+      "rig_evidence": "Replace with creator description or verified capture notes",
+      "training_use_authorized": false,
+      "amp_family": "unknown",
+      "gain_class": "unknown"
+    }
+  ],
+  "di": [
+    {"id": "di-01", "path": "di/performance-01.wav", "performance_group": "performance-01", "channel": "mono", "split": "train"},
+    {"id": "di-02", "path": "di/performance-02.wav", "performance_group": "performance-02", "channel": "mono", "split": "train"},
+    {"id": "di-03", "path": "di/performance-03.wav", "performance_group": "performance-03", "channel": "mono", "split": "validation"},
+    {"id": "di-04", "path": "di/performance-04.wav", "performance_group": "performance-04", "channel": "mono", "split": "test"}
+  ]
+}
