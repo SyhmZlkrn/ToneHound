@@ -133,9 +133,9 @@ the original collection is not modified.
 
 | Config | Encoder | What trains |
 | --- | --- | --- |
-| `mert_amp_v1.yaml` | Existing GTZAN-derived MERT-330M, layers 8â€“11 | Small contrastive head; backbone frozen |
-| `mert_amp_lora.yaml` | Original MERT-95M, layers 9â€“12 | Rank-8 query/value adapters in blocks 11â€“12 and head |
-| `mert_amp_unfreeze_last.yaml` | Original MERT-95M, layers 9â€“12 | Complete blocks 11â€“12 and head |
+| `mert_amp_v1.yaml` | Existing GTZAN-derived MERT-330M, layers 8–11 | Small contrastive head; backbone frozen |
+| `mert_amp_lora.yaml` | Original MERT-95M, layers 9–12 | Rank-8 query/value adapters in blocks 11–12 and head |
+| `mert_amp_unfreeze_last.yaml` | Original MERT-95M, layers 9–12 | Complete blocks 11–12 and head |
 
 Every experiment also fits a frozen covariance-projection baseline using its
 own pinned encoder. Trainable blocks are the last **used** blocks; updating
