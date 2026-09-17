@@ -1,5 +1,6 @@
 import hashlib
 
+import numpy as np
 import pytest
 import soundfile as sf
 
@@ -13,8 +14,14 @@ def test_clean_install_generates_reusable_deterministic_probe(tmp_path, monkeypa
     assert sf.info(path).duration == 15
     original = hashlib.sha256(path.read_bytes()).hexdigest()
     assert resolve_probe(tmp_path) == path
+    assert hashlib.sha256(path.read_bytes()).hexdigest() == original
     second = resolve_probe(tmp_path / 'other')
-    assert hashlib.sha256(second.read_bytes()).hexdigest() == original
+    # libsndfile's FLOAT WAV PEAK chunk contains the write timestamp. The
+    # deterministic contract is the decoded probe, not that container field.
+    first_audio, first_rate = sf.read(path)
+    second_audio, second_rate = sf.read(second)
+    assert first_rate == second_rate
+    np.testing.assert_array_equal(first_audio, second_audio)
 
 
 def test_existing_user_di_and_custom_path_are_preserved(tmp_path, monkeypatch):

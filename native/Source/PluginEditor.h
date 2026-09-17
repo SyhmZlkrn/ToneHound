@@ -108,6 +108,7 @@ private:
     juce::TextButton pitchSettings{"Pitch settings"};
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> pitchAttachment;
     juce::ComboBox passageRole;
+    juce::ComboBox matchingModel;
     std::array<juce::TextButton,4> pageTabs;
     std::unique_ptr<EqMatchPanel> eqPanel;
     std::unique_ptr<PedalPanel> pedalPanel;

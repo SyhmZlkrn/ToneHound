@@ -207,7 +207,7 @@ def cache_stem(root: Path, samples: np.ndarray, sample_rate: int = SAMPLE_RATE) 
 
 
 def match_song(root: Path, request: dict, progress: Callable) -> dict:
-    from .embed import EmbedConfig
+    from .lora import config_for
     from .pipeline import Pipeline, PipelineConfig
     from .index_probe import resolve_probe
     from .reference_features import analyse_reference
@@ -225,10 +225,15 @@ def match_song(root: Path, request: dict, progress: Callable) -> dict:
     cfg = PipelineConfig(profile_dir=profile_dir, cache_dir=root / '.cache',
                          di_path=resolve_probe(root),
                          seconds=duration, start_s=start, top=6,
-                         embed=EmbedConfig(dtype='float16', max_chunks=max(24, math.ceil(duration / 5))),
+                         embed=config_for(root, request.get('matching_model', 'standard'),
+                                          dtype='float16', max_chunks=max(24, math.ceil(duration / 5))),
                          separator_autocast=True, render_device='auto', persistent_catalogue=True)
     result = Pipeline(cfg).match(path, progress=progress)
     payload = result.to_json()
+    if payload.get('retrieval', {}).get('mode') == 'lora':
+        payload['caveat'] = ('Matching model: ' + payload['retrieval']['name']
+                            + '. Experimental; the pilot did not beat its frozen projection baseline. '
+                            + payload['caveat'])
     for match in payload['matches']:
         match.update(profile_row(Path(match['path']), root / '.cache/native'))
     stem_path = cache_stem(root, result.stem.samples)
@@ -253,11 +258,11 @@ def run(request: dict, root: Path = ROOT, progress: Callable | None = None) -> d
         return {'path': str(path.resolve())}
     if action == 'catalogue_index':
         from .pipeline import Pipeline, PipelineConfig
-        from .embed import EmbedConfig
+        from .lora import config_for
         from .index_probe import resolve_probe
         from .catalogue import Catalogue
         cfg=PipelineConfig(profile_dir=root/'.cache/tone3000/profiles',cache_dir=root/'.cache',
-            di_path=resolve_probe(root),embed=EmbedConfig(dtype='float16'),render_device='auto',persistent_catalogue=True,
+            di_path=resolve_probe(root),embed=config_for(root, request.get('matching_model', 'standard'), dtype='float16'),render_device='auto',persistent_catalogue=True,
             refresh_descriptors=bool(request.get('rebuild',False)))
         prepared = Pipeline(cfg).index(progress=progress)
         library(root)
@@ -265,6 +270,7 @@ def run(request: dict, root: Path = ROOT, progress: Callable | None = None) -> d
         summary['tone3000_indexed_count'] = summary['indexed_count']
         summary['indexed_count'] = len(prepared)
         summary['local_full_rig_count'] = sum(e.source=='community' for e in prepared.entries)
+        summary['retrieval'] = getattr(prepared, 'learning', {})
         return summary
     if action in ('catalogue_import', 'catalogue_export'):
         from .catalogue import Catalogue

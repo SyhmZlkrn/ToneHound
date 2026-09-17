@@ -16,6 +16,24 @@ int main(int argc,char** argv)
     try {
         if(args.contains("--dsp-check")){runMatchDSPTests();return 0;}
         auto root=findProjectRoot();
+        if(args.contains("--lora-ui-check")){
+            ToneHoundProcessor p;
+            auto editor=std::unique_ptr<juce::AudioProcessorEditor>(p.createEditor());
+            auto* selector=dynamic_cast<juce::ComboBox*>(editor->findChildWithID("reference.matchingModel"));
+            require(selector && selector->getNumItems()==2,"Matching model selector missing");
+            selector->setSelectedId(2,juce::sendNotificationSync);
+            require(p.matchingModel.load()==1,"LoRA selection is not wired to worker state");
+            juce::MemoryBlock saved;p.getStateInformation(saved);ToneHoundProcessor restored;
+            restored.setStateInformation(saved.getData(),(int)saved.getSize());
+            require(restored.matchingModel.load()==1,"LoRA selection did not survive state restore");
+            selector->setSelectedId(1,juce::sendNotificationSync);
+            require(p.matchingModel.load()==0,"Standard matcher cannot be restored");
+            auto old=p.state.copyState();old.removeProperty("matchingModel",nullptr);
+            auto xml=old.createXml();juce::MemoryBlock legacy;juce::AudioProcessor::copyXmlToBinary(*xml,legacy);
+            restored.setStateInformation(legacy.getData(),(int)legacy.getSize());
+            require(restored.matchingModel.load()==0,"Old sessions must retain the Standard matcher");
+            std::cout<<"PASS: LoRA selector, Standard switch, state round-trip and legacy sessions"<<std::endl;return 0;
+        }
         if(args.contains("--pitch-snapshot")){
             ToneHoundProcessor p;
             auto panel=makePitchPanel(p);
@@ -90,6 +108,7 @@ int main(int argc,char** argv)
             auto editor=std::unique_ptr<ToneHoundEditor>(static_cast<ToneHoundEditor*>(p.createEditor()));
             if(option(args,"--width").isNotEmpty()){auto width=option(args,"--width").getIntValue();editor->setSize(width,(int)std::round(width/1.5));}
             if(args.contains("--solo"))if(auto* role=dynamic_cast<juce::ComboBox*>(editor->findChildWithID("reference.role")))role->setSelectedId(2,juce::sendNotificationSync);
+            if(args.contains("--lora"))if(auto* model=dynamic_cast<juce::ComboBox*>(editor->findChildWithID("reference.matchingModel")))model->setSelectedId(2,juce::sendNotificationSync);
             auto reference=option(args,"--reference");
             if(reference.isNotEmpty()) editor->loadReferenceForPreview(juce::File(reference));
             auto deadline=juce::Time::getMillisecondCounterHiRes()+120000;
@@ -134,6 +153,7 @@ int main(int argc,char** argv)
                 do {pump(100);} while((p.analysis.snapshot().busy || p.loading) && juce::Time::getMillisecondCounterHiRes()<deadline);
                 pump(1000);
                 require(p.hasMatches() && p.modelReady,"Native matching failed: "+p.analysis.snapshot().message);
+                if(args.contains("--lora"))require(p.analysis.snapshot().response["result"]["retrieval"]["mode"].toString()=="lora","Match did not use the LoRA model");
                 auto result=p.matchInfo();require(result.isArray() && result.size()>0,"No native result cards");
                 require(p.profilePath()==result[0]["path"].toString(),"Top result did not load its NAM capture");
                 std::cout<<"PASS: native match button, Python pipeline, result cards and automatic capture load"<<std::endl;

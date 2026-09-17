@@ -237,3 +237,22 @@ def test_notebooks_are_valid_empty_and_code_compiles():
             if cell['cell_type'] == 'code':
                 assert cell['outputs'] == [] and cell['execution_count'] is None
                 compile(''.join(cell['source']),str(path),'exec')
+
+
+@pytest.mark.parametrize('name', ['ToneHound_Colab.ipynb', 'ToneHound_Kaggle.ipynb'])
+def test_notebook_runner_streams_output_and_propagates_failure(name, capsys):
+    import ast
+    import subprocess
+    import sys
+    notebook = read_json(ROOT/'notebooks'/name)
+    first = next(c for c in notebook['cells'] if c['cell_type'] == 'code')
+    tree = ast.parse(''.join(first['source']))
+    helper = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == 'run')
+    namespace = {'subprocess': subprocess}
+    exec(compile(ast.Module(body=[helper], type_ignores=[]), name, 'exec'), namespace)
+    with pytest.raises(subprocess.CalledProcessError) as error:
+        namespace['run']([sys.executable, '-u', '-c',
+                          'import sys; print("progress"); print("failure", file=sys.stderr); sys.exit(7)'])
+    assert error.value.returncode == 7
+    output = capsys.readouterr().out
+    assert 'progress' in output and 'failure' in output

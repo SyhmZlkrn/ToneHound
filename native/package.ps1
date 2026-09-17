@@ -17,6 +17,8 @@ Copy-Item -LiteralPath "$projectRoot/docs/stereo_matching_regression.json" -Dest
 Copy-Item -LiteralPath "$projectRoot/docs/STUDIO_FEATURES.md" -Destination "$destination/STUDIO_FEATURES.md" -Force
 Copy-Item -LiteralPath "$projectRoot/docs/CATALOGUE_AND_MERT.md" -Destination "$destination/CATALOGUE_AND_MERT.md" -Force
 Copy-Item -LiteralPath "$projectRoot/docs/MULTI_DI_TRAINING.md" -Destination "$destination/MULTI_DI_TRAINING.md" -Force
+Copy-Item -LiteralPath "$projectRoot/docs/LORA_MATCHING.md" -Destination "$destination/LORA_MATCHING.md" -Force
+Copy-Item -LiteralPath "$projectRoot/docs/COLAB_500_PILOT_REVIEW.md" -Destination "$destination/COLAB_500_PILOT_REVIEW.md" -Force
 Copy-Item -LiteralPath "$projectRoot/docs/retrieval_evaluation.json" -Destination "$destination/retrieval_evaluation.json" -Force
 Copy-Item -LiteralPath "$projectRoot/docs/STUDIO_VALIDATION.md" -Destination "$destination/STUDIO_VALIDATION.md" -Force
 Copy-Item -LiteralPath "$projectRoot/docs/RELEASE_AND_STORAGE.md" -Destination "$destination/RELEASE_AND_STORAGE.md" -Force

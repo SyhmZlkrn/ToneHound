@@ -4,6 +4,12 @@ ToneHound uses a JUCE desktop editor and the Neural Amp Modeler C++ engine. The
 standalone executable and VST3 share the same controls and signal processing.
 No browser, WebView, localhost server, or Python audio callback is involved.
 
+Song matching supports your trained LoRA export. In **Reference**, choose
+**Matching model > LoRA (pilot)**, then **Find matching tones**. Standard remains
+available, and the choice is saved with your session. See
+`LORA_MATCHING.md` in the bundle or [the source guide](../docs/LORA_MATCHING.md)
+for installation and the pilot's limits.
+
 ## Play guitar
 
 1. Open `dist/ToneHound/ToneHound.exe`.

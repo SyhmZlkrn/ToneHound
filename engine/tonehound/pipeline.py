@@ -180,7 +180,8 @@ class Pipeline:
     @property
     def embedder(self) -> MertEmbedder:
         if self._embedder is None:
-            self._embedder = MertEmbedder(self.cfg.embed)
+            from .lora import create_embedder
+            self._embedder = create_embedder(self.cfg.embed)
         return self._embedder
 
     @property
@@ -194,12 +195,15 @@ class Pipeline:
               entries: Sequence[Any] | None = None) -> ToneIndex:
         """The profile library, built on first use and cached to disk."""
         if self._index is None:
+            if getattr(self.embedder, 'trained', False):
+                if progress:
+                    progress('indexing', 0., 'Loading the LoRA matching model')
+                # Surface load errors before per-capture rendering can skip them.
+                self.embedder.model
             if self.cfg.persistent_catalogue and entries is None:
                 from .catalogue import Catalogue
                 self._index = Catalogue(self.cfg.cache_dir.parent).index(self.cfg, self.embedder, self.di, progress)
-                if self.cfg.learned_retrieval:
-                    from .tone_learning import apply_active
-                    self._index = apply_active(self._index, self.cfg.cache_dir/'tone_learning/active.npz', progress)
+                self._index = self._retrieval_index(self._index, progress)
                 return self._index
             found = list(entries) if entries is not None else scan(self.cfg.profile_dir)
             if not found:
@@ -216,10 +220,19 @@ class Pipeline:
                 embedder=self.embedder, seconds=self.cfg.index_seconds,
                 render_device=self.cfg.render_device,
                 progress=step, work_dir=self.cfg.cache_dir)
-            if self.cfg.learned_retrieval:
-                from .tone_learning import apply_active
-                self._index = apply_active(self._index, self.cfg.cache_dir/'tone_learning/active.npz', progress)
+            self._index = self._retrieval_index(self._index, progress)
         return self._index
+
+    def _retrieval_index(self, index, progress):
+        if getattr(self.embedder, 'trained', False):
+            # The contrastive head was trained/evaluated with ordinary cosine.
+            # Never apply the unrelated 330M projection to its 128D output.
+            index = ToneIndex(index.entries, index.vectors, index.embed_key, index.di_key, centred=False)
+            index.learning = dict(self.embedder.retrieval, profiles=len(index))
+        elif self.cfg.learned_retrieval:
+            from .tone_learning import apply_active
+            index = apply_active(index, self.cfg.cache_dir/'tone_learning/active.npz', progress)
+        return index
 
     # -- the run ---------------------------------------------------------
 

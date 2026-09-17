@@ -97,6 +97,7 @@ ToneHoundProcessor::ToneHoundProcessor()
                                        .withOutput("Output",juce::AudioChannelSet::stereo(),true)),
       state(*this,nullptr,"ToneHound",parameters()), root(findProjectRoot()), analysis(root), artwork(root)
 {
+    matchingModel = root.getChildFile(".cache/matching_models/lora/model.json").existsAsFile() ? 1 : 0;
     const char* ids[]{"input","output","gate","bass","mid","treble","monitor","bypass","channel"};
     for(size_t i=0;i<values.size();++i) values[i]=state.getRawParameterValue(ids[i]);
     const char* effectIds[]{"eqMatchEnabled","screamerEnabled","screamerDrive","screamerTone","screamerLevel","delayEnabled","delayMix","delayFeedback","delayDivision","delayBpm","reverbEnabled","reverbMix","reverbSize","performanceRole"};
@@ -382,6 +383,7 @@ void ToneHoundProcessor::getStateInformation(juce::MemoryBlock& data)
     tree.setProperty("reference",juce::JSON::toString(referenceInfo()),nullptr);
     tree.setProperty("matches",juce::JSON::toString(matchInfo()),nullptr);
     tree.setProperty("matchNote",matchExplanation(),nullptr);
+    tree.setProperty("matchingModel",matchingModel.load(),nullptr);
     tree.setProperty("selectionStart",selectionStart.load(),nullptr); tree.setProperty("selectionEnd",selectionEnd.load(),nullptr);
     juce::Array<juce::var> curve;for(auto gain:eqMatch.gains())curve.add(gain);
     tree.setProperty("eqMatchCurve",juce::JSON::toString(curve),nullptr);tree.setProperty("eqMatchValid",eqMatch.ready(),nullptr);
@@ -394,6 +396,7 @@ void ToneHoundProcessor::setStateInformation(const void* data,int size)
         auto tree=juce::ValueTree::fromXml(*xml);
         if(!tree.hasType(state.state.getType())) return;
         state.replaceState(tree);
+        matchingModel = (int)tree.getProperty("matchingModel",0)==1 ? 1 : 0;
         const bool restoreMatchedEQ=effectValues[0]->load()>.5f;
         setReference(juce::JSON::parse(tree["reference"].toString())); setMatches(juce::JSON::parse(tree["matches"].toString()),tree["matchNote"].toString());
         auto path=tree["profile"].toString(); if(path.isNotEmpty()) loadProfile(juce::File(path),tree["profileName"].toString(),true);

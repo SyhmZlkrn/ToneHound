@@ -166,6 +166,17 @@ ToneHoundEditor::ToneHoundEditor(ToneHoundProcessor& p) : AudioProcessorEditor(p
     passageRole.addItem("Rhythm - dry / tight",1);passageRole.addItem("Solo - delay / reverb",2);passageRole.setSelectedId(1,juce::dontSendNotification);
     roleAttachment=std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(p.state,"performanceRole",passageRole);
     passageRole.setName("Passage type");passageRole.setComponentID("reference.role");passageRole.onChange=[this]{applyRoleEffects();};
+    addAndMakeVisible(matchingModel);
+    matchingModel.addItem("Standard",1);matchingModel.addItem("LoRA (pilot)",2);
+    matchingModel.setItemEnabled(2,processor.root.getChildFile(".cache/matching_models/lora/model.json").existsAsFile());
+    matchingModel.setName("Matching model");matchingModel.setComponentID("reference.matchingModel");
+    matchingModel.setTooltip("LoRA uses your trained pilot adapter and head for song matching. Standard uses the existing MERT matcher. LoRA is experimental.");
+    matchingModel.setSelectedId(processor.matchingModel.load()+1,juce::dontSendNotification);
+    matchingModel.onChange=[this]{
+        processor.matchingModel=matchingModel.getSelectedId()==2?1:0;
+        processor.setMatches(juce::var{});updateCards();
+        status=matchingModel.getText()+" selected. Find matching tones to refresh the results.";repaint();
+    };
     profiles.setComponentID("amp.selector");
     channel.addItem("Input 1",1);channel.addItem("Input 2",2);
     channelAttachment=std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(p.state,"channel",channel);
@@ -197,7 +208,8 @@ ToneHoundEditor::ToneHoundEditor(ToneHoundProcessor& p) : AudioProcessorEditor(p
     findButton.onClick=[this] {
         processor.previewPlaying=false;
         processor.analysis.submit(object({{"action","match"},{"path",processor.referenceInfo()["path"]},
-                                          {"start",waveform.start},{"end",waveform.end},{"role",passageRole.getSelectedId()==2?"solo":"rhythm"}}));
+                                          {"start",waveform.start},{"end",waveform.end},{"role",passageRole.getSelectedId()==2?"solo":"rhythm"},
+                                          {"matching_model",processor.matchingModel.load()==1?"lora":"standard"}}));
     };
     cancelButton.onClick=[this]{processor.analysis.cancel();};io.onClick=[this]{showIO();};
     profiles.onChange=[this]{auto i=profiles.getSelectedId()-1;if(i>=0&&i<(int)library.size())selectCapture(library[(size_t)i]);};
@@ -377,7 +389,7 @@ void ToneHoundEditor::receive(const AnalysisBridge::Snapshot& job)
             info->setProperty("stem_note",stemNote);info->setProperty("stem_path",result["stem_path"]);
             info->setProperty("reference_features",result["reference_features"]);info->setProperty("role",passageRole.getSelectedId()==2?"solo":"rhythm");processor.setReference(reference);
         }
-        status="Closest sounds in your library. These results do not identify the recording's original amp.";
+        status=(result["retrieval"]["mode"].toString()=="lora"?"LoRA (pilot): ":"Standard: ")+juce::String("closest sounds in your library. Audition the captures to compare.");
         if(auto* rows=result["matches"].getArray();rows&&!rows->isEmpty())selectCapture(rows->getReference(0));
         processor.loadEqTarget(juce::File(result["stem_path"].toString()));applyRoleEffects();
     }
@@ -410,6 +422,8 @@ void ToneHoundEditor::timerCallback()
            processor.artwork.submit(object({{"action","artwork"},{"tone_id",wanted}}))) requestedArtwork=wanted;
     }
     importButton.setEnabled(!job.busy);fetchButton.setEnabled(!job.busy);
+    matchingModel.setEnabled(!job.busy);
+    matchingModel.setSelectedId(processor.matchingModel.load()+1,juce::dontSendNotification);
     findButton.setEnabled(!job.busy && duration>=30);findButton.setButtonText(job.busy?"Working...":"Find matching tones");
     cancelButton.setVisible(job.busy);previewButton.setEnabled(duration>=30 && !job.busy);
     matchHelp.setVisible(processor.hasMatches());
@@ -464,7 +478,8 @@ void ToneHoundEditor::paint(juce::Graphics& g)
     label(g,duration>0?clockText(duration)+"  /  "+(referenceChannels==2?"Stereo":referenceChannels==1?"Mono":"Re-import for stereo"):"Choose a song at least 30 seconds long",{1012,314,380,20},14,palette::muted);
     label(g,"Start",{1012,532,174,20},14,palette::muted,true);label(g,"End",{1214,532,178,20},14,palette::muted,true);
     label(g,duration>0?juce::String(waveform.end-waveform.start,1)+" seconds selected / minimum 30":"Default selection: 40 seconds",{1012,603,380,22},14,palette::accent);
-    label(g,"Passage type",{1012,689,380,21},15,palette::text,true);
+    label(g,"Passage type",{1012,689,192,21},15,palette::text,true);
+    label(g,"Matching model",{1220,689,172,21},15,palette::text,true);
     auto features=processor.referenceInfo()["reference_features"];
     const auto bpm=(double)features["bpm"];
     juce::String effects=passageRole.getSelectedId()==2?"Auto delay + reverb":"Dry rhythm preset";
@@ -499,7 +514,8 @@ void ToneHoundEditor::resized()
     bounds(importButton,1012,200,380,40);bounds(url,1012,200,280,40);bounds(fetchButton,1304,200,88,40);
     bounds(waveform,1012,344,380,170);bounds(startField,1012,555,178,38);bounds(endField,1214,555,178,38);
     bounds(previewButton,1012,636,275,40);bounds(loopButton,1301,636,91,40);
-    bounds(passageRole,1012,718,380,38);bounds(findButton,1012,794,380,43);bounds(cancelButton,1304,881,88,30);
+    bounds(passageRole,1012,718,192,38);bounds(matchingModel,1220,718,172,38);
+    bounds(findButton,1012,794,380,43);bounds(cancelButton,1304,881,88,30);
     bounds(matchHelp,775,693,193,31);
 }
 

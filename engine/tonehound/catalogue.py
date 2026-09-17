@@ -156,6 +156,9 @@ class Catalogue:
     def index(self, cfg, embedder, di, progress=None):
         di_key = _array_key(np.asarray(di, dtype=np.float32)[:int(cfg.index_seconds*48000)])
         embed_key = embedder.cfg.key()
+        # LoRA descriptors live in their own hash-keyed index. Keep the shipped
+        # standard descriptors intact when switching models or exporting packs.
+        store_descriptors = not getattr(embedder, 'trained', False)
         local = scan(cfg.profile_dir)
         from .community import entries as community_entries
         local = list({e.key:e for e in local + community_entries(cfg.cache_dir.parent)}.values())
@@ -173,7 +176,7 @@ class Catalogue:
         for row in stored:
             # A shipped descriptor is immutable until an explicit rebuild. The
             # recipient's personal DI does not invalidate its reference probe.
-            if not refresh and row['vector'] is not None and row['embed_key']==embed_key:
+            if store_descriptors and not refresh and row['vector'] is not None and row['embed_key']==embed_key:
                 vector = np.frombuffer(row['vector'], dtype='<f4').copy()
                 if vector.size and np.isfinite(vector).all():
                     cached[row['file_key']] = vector
@@ -192,7 +195,7 @@ class Catalogue:
             kept.append(entry)
             vectors.append(vector)
             old = by_model.get(entry.model_id)
-            if entry.model_id is not None and (refresh or old is None or old['vector'] is None or old['embed_key']!=embed_key):
+            if store_descriptors and entry.model_id is not None and (refresh or old is None or old['vector'] is None or old['embed_key']!=embed_key):
                 with self.connect() as db:
                     db.execute('UPDATE models SET embed_key=?,di_key=?,vector=? WHERE model_id=?',
                                (embed_key,di_key,vector.tobytes(),entry.model_id))

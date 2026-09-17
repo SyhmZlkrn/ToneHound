@@ -68,6 +68,7 @@ def extract(model, data, indices, device, batch_size, precision, *, features=Fal
     model.eval()
     dim = model.backbone.config.hidden_size * len(model.layers) if features else model.spec['embedding_dim']
     vectors = np.zeros((len(data), dim), np.float32)
+    started = time.monotonic()
     for start in range(0, len(indices), batch_size):
         ids = indices[start:start+batch_size]
         x = torch.stack([data[i][0] for i in ids]).to(device)
@@ -77,6 +78,10 @@ def extract(model, data, indices, device, batch_size, precision, *, features=Fal
         if not np.isfinite(z).all() or (np.linalg.norm(z, axis=1) < 1e-8).any():
             raise ValueError('Invalid encoder output')
         vectors[ids] = z
+        completed = start + len(ids)
+        if completed // 100 != start // 100 or completed == len(indices):
+            print(f'Embedded {completed}/{len(indices)} examples '
+                  f'({time.monotonic()-started:.0f}s)', flush=True)
     return vectors
 
 
@@ -131,6 +136,7 @@ def run_info(cfg, data, model, device):
 
 def train(cfg, dataset, output, *, device='cuda', resume=False, model_factory=ToneEncoder, stop_after_steps=None):
     """An interruption restarts at the last saved optimizer boundary."""
+    print('Verifying dataset files and split isolation', flush=True)
     data = AudioDataset(dataset)
     t = cfg['training']
     sampler = ToneBatchSampler(data, t['classes_per_batch'], t['takes_per_class'], cfg['seed'], t['steps_per_epoch'])

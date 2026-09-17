@@ -82,6 +82,31 @@ def test_registration_preserves_existing_vectors_and_lru_time(tmp_path):
     assert after['vector']==before['vector'] and after['accessed']==before['accessed']
 
 
+def test_lora_index_does_not_overwrite_standard_descriptors_and_reuses_cache(tmp_path):
+    from tonehound.pipeline import PipelineConfig
+    store = Catalogue(tmp_path)
+    entry = add(store, 1, managed=False)
+    indexed(store, entry, [1, 0, 0])
+    before = store.rows()[0]
+    class TrainedEmbedder:
+        trained = True
+        cfg = SimpleNamespace(key=lambda: 'lora-weights')
+        calls = 0
+        def embed(self, audio, sr):
+            self.calls += 1
+            return np.array([.6, .8], dtype='float32')
+    embedder = TrainedEmbedder()
+    cfg = PipelineConfig(profile_dir=store.directory, cache_dir=tmp_path / '.cache',
+                         embed=embedder.cfg, index_seconds=1)
+    di = np.sin(np.arange(48000)*.1).astype('float32')
+    first = store.index(cfg, embedder, di)
+    second = store.index(cfg, embedder, di)
+    assert first.dim == 2 and embedder.calls == 1
+    np.testing.assert_array_equal(first.vectors, second.vectors)
+    after = store.rows()[0]
+    assert after['vector'] == before['vector'] and after['embed_key'] == before['embed_key']
+
+
 def test_concurrent_eviction_is_idempotent(tmp_path):
     store=Catalogue(tmp_path)
     for i in range(8):

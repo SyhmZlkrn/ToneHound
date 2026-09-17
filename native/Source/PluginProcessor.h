@@ -72,6 +72,7 @@ public:
     std::atomic<float> inputPeak{0}, outputPeak{0};
     std::atomic<bool> modelReady{false}, loading{false}, audioFault{false};
     std::atomic<bool> previewPlaying{false}, previewRestart{false}, previewLoop{true};
+    std::atomic<int> matchingModel{0}; // 0 Standard, 1 installed LoRA; analysis only
     std::atomic<double> previewPosition{0}, selectionStart{0}, selectionEnd{40}, rate{48000};
 
 private:

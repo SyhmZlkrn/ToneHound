@@ -137,7 +137,7 @@ def build(manifest, output, *, plan_only=False, device='cpu', renderer=None):
         state = dict(plan_sha256=plan_hash, records={})
         write_json(state_path, state)
     rows = []
-    for rig in plan['profiles']:
+    for rig_number, rig in enumerate(plan['profiles'], 1):
         model = None
         for take in plan['di']:
             audio = None
@@ -177,7 +177,8 @@ def build(manifest, output, *, plan_only=False, device='cpu', renderer=None):
                             write_json(state_path, state)
                     rows.append(record)
         write_json(state_path, state)
-        print('Rendered ' + rig['id'], flush=True)
+        print(f"Rendered {rig_number}/{len(plan['profiles'])} rigs: {rig['id']} "
+              f"({len(rows)}/{count} examples)", flush=True)
     metadata = dict(schema=1, sample_rate=SAMPLE_RATE, seconds=plan['render']['seconds'], renderer=plan['renderer'],
                     plan_sha256=plan_hash, profiles=[{k:v for k,v in p.items() if k != 'path'} for p in plan['profiles']],
                     di=[{k:v for k,v in p.items() if k != 'path'} for p in plan['di']], records=rows)

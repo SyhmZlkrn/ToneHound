@@ -24,8 +24,10 @@ installing every model. See [the studio guide](docs/STUDIO_FEATURES.md) and
 Use the [Colab/Kaggle training walkthrough](docs/CLOUD_TRAINING.md) to prepare
 full-rig captures with multiple independent DI performances, train a contrastive
 MERT head or fine-tune MERT, and evaluate against a frozen baseline. The dataset
-and checkpoints stay in private storage. The current desktop matcher remains
-unchanged until a trained candidate has been evaluated and integrated.
+and checkpoints stay in private storage. The native app supports an installed
+LoRA adapter and head through **Reference > Matching model > LoRA (pilot)**.
+The existing Standard matcher remains available. See
+[LoRA installation and usage](docs/LORA_MATCHING.md) for setup and pilot limits.
 
 [Open the Colab notebook](https://colab.research.google.com/github/SyhmZlkrn/ToneHound/blob/main/notebooks/ToneHound_Colab.ipynb)
 
@@ -132,8 +134,8 @@ for disk measurements, safe cleanup and distribution constraints.
 ## Prepare source for GitHub
 
 The selected destination is [SyhmZlkrn/ToneHound](https://github.com/SyhmZlkrn/ToneHound).
-The current request explicitly defers commits. These commands only inspect and
-create a local source archive; they do not stage, commit, push or publish:
+These commands inspect and create a local source archive; they do not stage,
+commit, push or publish:
 
 ```powershell
 python scripts/export_source.py --check
